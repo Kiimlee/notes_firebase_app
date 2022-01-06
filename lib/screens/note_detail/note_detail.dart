@@ -1,51 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:notes_firebase_app/data/models/task.dart';
+import 'add_task_dialog.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:notes_firebase_app/repository/data_repository.dart';
 
 class NoteDetail extends StatefulWidget {
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
+  const NoteDetail({Key? key, required this.noteId}) : super(key: key);
 
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
+  final String noteId;
 
   @override
   State<NoteDetail> createState() => _NoteDetailState();
 }
 
 class _NoteDetailState extends State<NoteDetail> {
-  static Task firstSleepTask = Task("Se lever à 7h30 du matin", true);
-  static Task secondSleepTask = Task("Manger son petit déjeuner à 8h", false);
-  static Task thirdSleepTask = Task("Se coucher avant minuit", false);
+  final DataRepository repository = DataRepository();
 
-  static List<Task> sleepTasks = [
-    firstSleepTask,
-    secondSleepTask,
-    thirdSleepTask
-  ];
+  Widget taskCheckBox(BuildContext context, Task task) {
+    return Checkbox(
+      value: task.isChecked,
+      onChanged: (bool? isChecked) {
+        setState(
+          () {
+            task.isChecked = isChecked ?? false;
+            final updatedTask =
+                Task(task.contentMessage, task.isChecked, task.contentMessage);
+            repository.updateTask(widget.noteId, task);
+          },
+        );
+      },
+    );
+  }
 
-  Widget taskTile(BuildContext context, Task task, int index) {
-    Widget taskCheckBox(BuildContext context, bool value) {
-      return Checkbox(
-        value: value,
-        onChanged: (bool? value) {
-          setState(
-            () {
-              sleepTasks[index].isChecked = value!;
-            },
-          );
-        },
-      );
-    }
-
+  Widget taskTile(BuildContext context, Task task) {
     return Container(
       height: 50,
       color: const Color(0xFF393939),
       child: Row(
         children: [
-          taskCheckBox(context, task.isChecked),
+          taskCheckBox(context, task),
           Container(
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.only(left: 8),
@@ -60,24 +53,49 @@ class _NoteDetailState extends State<NoteDetail> {
     );
   }
 
+  void _addTasks(String noteId) {
+    showDialog<Widget>(
+      context: context,
+      builder: (BuildContext context) {
+        return AddTaskDialog(noteId: noteId);
+      },
+    );
+  }
+
+  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
+    return ListView(
+      padding: const EdgeInsets.only(top: 20.0),
+      // 2
+      children: snapshot.map((data) => _buildListItem(context, data)).toList(),
+    );
+  }
+
+  Widget _buildListItem(BuildContext context, DocumentSnapshot snapshot) {
+    final task = Task.fromSnapshot(snapshot);
+    return taskTile(context, task);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Détail de notes"),
       ),
-      body: SafeArea(
-        child: ListView.builder(
-          padding: const EdgeInsets.all(8),
-          scrollDirection: Axis.vertical,
-          itemCount: sleepTasks.length,
-          itemBuilder: (context, index) {
-            final task = sleepTasks[index];
+      body: StreamBuilder<QuerySnapshot>(
+        stream: repository.getStreamDetail(widget.noteId),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return LinearProgressIndicator();
 
-            return taskTile(context, task, index);
-          },
-        ),
+          return _buildList(context, snapshot.data?.docs ?? []);
+        },
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _addTasks(widget.noteId);
+        },
+        tooltip: 'Add Task',
+        child: const Icon(Icons.add),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

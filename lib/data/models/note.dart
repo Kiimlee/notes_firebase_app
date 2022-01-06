@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:notes_firebase_app/data/models/task.dart';
 
 class Note {
   String title;

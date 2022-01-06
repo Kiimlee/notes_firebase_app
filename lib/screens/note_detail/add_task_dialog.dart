@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:notes_firebase_app/data/models/note.dart';
+import 'package:notes_firebase_app/data/models/task.dart';
 import 'package:notes_firebase_app/repository/data_repository.dart';
 
-class AddNoteDialog extends StatefulWidget {
-  const AddNoteDialog({Key? key}) : super(key: key);
+class AddTaskDialog extends StatefulWidget {
+  const AddTaskDialog({Key? key, required this.noteId}) : super(key: key);
+
+  final String noteId;
 
   @override
-  _AddNoteDialogState createState() => _AddNoteDialogState();
+  _AddTaskDialogState createState() => _AddTaskDialogState();
 }
 
-class _AddNoteDialogState extends State<AddNoteDialog> {
-  String? noteTitle;
-  String? noteId;
+class _AddTaskDialogState extends State<AddTaskDialog> {
+  String? title;
+  bool done = false;
 
   final DataRepository repository = DataRepository();
 
@@ -26,8 +28,17 @@ class _AddNoteDialogState extends State<AddNoteDialog> {
                 autofocus: true,
                 decoration: const InputDecoration(
                     border: OutlineInputBorder(), hintText: 'Note Title'),
-                onChanged: (text) => noteTitle = text,
+                onChanged: (text) => title = text,
               ),
+              Checkbox(
+                  checkColor: Colors.white,
+                  fillColor: MaterialStateProperty.all(Colors.blue),
+                  value: done,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      done = value ?? false;
+                    });
+                  }),
             ],
           ),
         ),
@@ -39,9 +50,9 @@ class _AddNoteDialogState extends State<AddNoteDialog> {
               child: const Text('Cancel')),
           TextButton(
               onPressed: () {
-                if (noteTitle != null) {
-                  final newNote = Note(noteTitle!, noteTitle! + '1');
-                  repository.addNote(newNote);
+                if (title != null) {
+                  final newtask = Task(title!, done, title! + "1");
+                  repository.addTask(widget.noteId, newtask);
                   Navigator.of(context).pop();
                 }
               },
