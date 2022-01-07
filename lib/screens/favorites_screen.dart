@@ -3,17 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:notes_firebase_app/data/models/note.dart';
 import 'package:notes_firebase_app/screens/note_detail/note_detail.dart';
 import 'package:notes_firebase_app/repository/data_repository.dart';
-import 'add_note_dialog.dart';
 import '../../data/models/models.dart';
 
-class NotesList extends StatefulWidget {
-  const NotesList({Key? key}) : super(key: key);
+class FavoritesScreen extends StatefulWidget {
+  const FavoritesScreen({Key? key}) : super(key: key);
 
   @override
-  State<NotesList> createState() => _NotesListState();
+  State<FavoritesScreen> createState() => _FavoritesScreenState();
 }
 
-class _NotesListState extends State<NotesList> {
+class _FavoritesScreenState extends State<FavoritesScreen> {
   final DataRepository repository = DataRepository();
 
   Widget noteTile(BuildContext context, Note note) {
@@ -53,15 +52,6 @@ class _NotesListState extends State<NotesList> {
     return noteTile(context, note);
   }
 
-  void _addNote() {
-    showDialog<Widget>(
-      context: context,
-      builder: (BuildContext context) {
-        return const AddNoteDialog();
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,13 +63,6 @@ class _NotesListState extends State<NotesList> {
           return _buildList(context, snapshot.data?.docs ?? []);
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _addNote();
-        },
-        tooltip: 'Add Note',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
