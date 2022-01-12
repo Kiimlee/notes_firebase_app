@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:notes_firebase_app/data/models/shared_preferences_manager.dart';
 import 'package:notes_firebase_app/notes_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:notes_firebase_app/data/models/models.dart';
@@ -23,6 +24,7 @@ class _NoteFirebaseAppState extends State<NoteFirebaseApp> {
   final _appStateManager = AppStateManager();
   final _notesManager = NotesManager();
   final _profileManager = ProfileManager();
+  final _preferencesManager = SharedPreferencesManager();
   late AppRouter _appRouter;
 
   @override
@@ -32,6 +34,7 @@ class _NoteFirebaseAppState extends State<NoteFirebaseApp> {
       appStateManager: _appStateManager,
       notesManager: _notesManager,
       profileManager: _profileManager,
+      sharedPreferencesManager: _preferencesManager,
     );
   }
 
@@ -48,6 +51,9 @@ class _NoteFirebaseAppState extends State<NoteFirebaseApp> {
         ChangeNotifierProvider(
           create: (context) => _appStateManager,
         ),
+        ChangeNotifierProvider(
+          create: (context) => _preferencesManager,
+        )
       ],
       child: Consumer<ProfileManager>(
         builder: (context, profileManager, child) {

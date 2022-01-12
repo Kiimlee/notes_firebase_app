@@ -33,7 +33,9 @@ dependencies:
   webview_flutter: ^2.0.13
   provider: ^6.0.0
   google_fonts: ^2.1.0
-
+  shared_preferences: ^2.0.7
+  flutter_slidable: ^0.6.0
+  
   flutter:
     sdk: flutter
 

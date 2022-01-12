@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:convert';
 
 class Note {
   String title;
@@ -14,6 +15,20 @@ class Note {
   }
 
   Map<String, dynamic> toJson() => _noteToJson(this);
+
+  static Map<String, dynamic> toMap(Note note) => {
+        'title': note.title,
+        'id': note.id,
+      };
+
+  static String encode(List<Note> notes) => json.encode(
+        notes.map<Map<String, dynamic>>((note) => Note.toMap(note)).toList(),
+      );
+
+  static List<Note> decode(String notes) =>
+      (json.decode(notes) as List<dynamic>)
+          .map<Note>((item) => Note.fromJson(item))
+          .toList();
 
   @override
   toString() => 'Note<$title>';

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notes_firebase_app/data/models/models.dart';
+import 'package:notes_firebase_app/data/models/shared_preferences_manager.dart';
 import 'package:notes_firebase_app/screens/screens.dart';
 
 class AppRouter extends RouterDelegate
@@ -13,14 +14,18 @@ class AppRouter extends RouterDelegate
 
   final ProfileManager profileManager;
 
+  final SharedPreferencesManager sharedPreferencesManager;
+
   AppRouter({
     required this.appStateManager,
     required this.notesManager,
     required this.profileManager,
+    required this.sharedPreferencesManager,
   }) : navigatorKey = GlobalKey<NavigatorState>() {
     appStateManager.addListener(notifyListeners);
     notesManager.addListener(notifyListeners);
     profileManager.addListener(notifyListeners);
+    sharedPreferencesManager.addListener(notifyListeners);
   }
 
   @override
@@ -28,6 +33,8 @@ class AppRouter extends RouterDelegate
     appStateManager.removeListener(notifyListeners);
     notesManager.removeListener(notifyListeners);
     profileManager.removeListener(notifyListeners);
+    sharedPreferencesManager.removeListener(notifyListeners);
+
     super.dispose();
   }
 

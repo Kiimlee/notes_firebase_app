@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:notes_firebase_app/data/models/note.dart';
+import 'package:notes_firebase_app/data/models/shared_preferences_manager.dart';
 import 'package:notes_firebase_app/screens/note_detail/note_detail.dart';
 import 'package:notes_firebase_app/repository/data_repository.dart';
+import 'package:provider/provider.dart';
 import 'add_note_dialog.dart';
 import '../../data/models/models.dart';
 
@@ -15,6 +17,8 @@ class NotesList extends StatefulWidget {
 
 class _NotesListState extends State<NotesList> {
   final DataRepository repository = DataRepository();
+  final SharedPreferencesManager preferencesManager =
+      SharedPreferencesManager();
 
   Widget noteTile(BuildContext context, Note note) {
     return InkWell(
@@ -25,18 +29,40 @@ class _NotesListState extends State<NotesList> {
                 builder: (context) => NoteDetail(noteId: note.id)));
       },
       child: Container(
-        height: 50,
-        color: const Color(0xFF393939),
-        child: Container(
-          alignment: Alignment.centerLeft,
-          padding: const EdgeInsets.only(left: 8),
-          child: Text(note.title,
-              style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                  color: Colors.white)),
-        ),
-      ),
+          color: const Color(0xFF393939),
+          child: Stack(
+            children: [
+              Row(
+                children: [
+                  SizedBox(
+                    height: 50,
+                    child: Container(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.only(left: 8),
+                      child: Text(note.title,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: Colors.white)),
+                    ),
+                  ),
+                ],
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: IconButton(
+                    onPressed: () {
+                      setState(() {});
+                      preferencesManager.saveFavNote(note);
+                      final String message =
+                          '${note.title} a été ajouté dans la liste de favoris';
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text(message)));
+                    },
+                    icon: const Icon(Icons.add, color: Colors.grey)),
+              )
+            ],
+          )),
     );
   }
 
