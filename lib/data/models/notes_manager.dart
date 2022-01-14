@@ -9,8 +9,6 @@ class NotesManager extends ChangeNotifier {
 
   List<Note> get noteItems => List.unmodifiable(_noteItems);
   int get selectedIndex => _selectedIndex;
-  Note? get selectedGroceryItem =>
-      _selectedIndex != -1 ? _noteItems[_selectedIndex] : null;
   bool get isCreatingNewItem => _createNewItem;
 
   void createNewItem() {
@@ -20,12 +18,6 @@ class NotesManager extends ChangeNotifier {
 
   void deleteItem(int index) {
     _noteItems.removeAt(index);
-    notifyListeners();
-  }
-
-  void groceryItemTapped(int index) {
-    _selectedIndex = index;
-    _createNewItem = false;
     notifyListeners();
   }
 
@@ -41,10 +33,4 @@ class NotesManager extends ChangeNotifier {
     _createNewItem = false;
     notifyListeners();
   }
-
-  // void completeItem(int index, bool change) {
-  //   final item = _noteItems[index];
-  //   _noteItems[index] = item.copyWith(isComplete: change);
-  //   notifyListeners();
-  // }
 }

@@ -4,6 +4,7 @@ import 'package:notes_firebase_app/data/models/shared_preferences_manager.dart';
 import 'package:notes_firebase_app/notes_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:notes_firebase_app/data/models/models.dart';
+import 'navigation/app_route_parser.dart';
 import 'navigation/app_router.dart';
 
 Future<void> main() async {
@@ -25,6 +26,7 @@ class _NoteFirebaseAppState extends State<NoteFirebaseApp> {
   final _notesManager = NotesManager();
   final _profileManager = ProfileManager();
   final _preferencesManager = SharedPreferencesManager();
+  final routeParser = AppRouteParser();
   late AppRouter _appRouter;
 
   @override
@@ -64,13 +66,14 @@ class _NoteFirebaseAppState extends State<NoteFirebaseApp> {
             theme = NotesTheme.light();
           }
 
-          return MaterialApp(
+          return MaterialApp.router(
             theme: theme,
             title: 'Fooderlich',
-            home: Router(
-              routerDelegate: _appRouter,
-              // TODO: Add backButtonDispatcher
-            ),
+            backButtonDispatcher: RootBackButtonDispatcher(),
+            // 1
+            routeInformationParser: routeParser,
+            // 2
+            routerDelegate: _appRouter,
           );
         },
       ),

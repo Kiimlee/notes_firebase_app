@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:notes_firebase_app/data/models/note.dart';
 import 'package:notes_firebase_app/data/models/shared_preferences_manager.dart';

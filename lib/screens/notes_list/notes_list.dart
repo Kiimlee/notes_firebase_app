@@ -4,7 +4,6 @@ import 'package:notes_firebase_app/data/models/note.dart';
 import 'package:notes_firebase_app/data/models/shared_preferences_manager.dart';
 import 'package:notes_firebase_app/screens/note_detail/note_detail.dart';
 import 'package:notes_firebase_app/repository/data_repository.dart';
-import 'package:provider/provider.dart';
 import 'add_note_dialog.dart';
 import '../../data/models/models.dart';
 
