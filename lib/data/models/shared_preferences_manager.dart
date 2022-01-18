@@ -1,9 +1,32 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import '../../data/models/models.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesManager extends ChangeNotifier {
+  void saveUser(NoteUser user) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final String encodeData = jsonEncode(user.toJson());
+    await prefs.setString('user', encodeData);
+  }
+
+  Future<NoteUser?> getUser() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final String? userString = prefs.getString('user');
+
+    if (userString == null) {
+      return null;
+    } else {
+      final NoteUser user = NoteUser.fromJson(jsonDecode(userString));
+      notifyListeners();
+      return user;
+    }
+  }
+
   void saveNotes(List<Note> notes) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 

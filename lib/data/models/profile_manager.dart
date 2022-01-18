@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'models.dart';
 
 class ProfileManager extends ChangeNotifier {
-  User get getUser => User(
-        firstName: 'Stef',
-        lastName: 'Patt',
+  NoteUser get getUser => NoteUser(
+        email: 'Stef',
+        displayName: 'Patt',
         profileImageUrl: 'assets/me.jpg',
         darkMode: _darkMode,
       );

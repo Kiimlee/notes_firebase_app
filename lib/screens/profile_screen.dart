@@ -1,30 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:notes_firebase_app/components/circle_image.dart';
+import 'package:notes_firebase_app/data/models/auth_manager.dart';
 import 'package:notes_firebase_app/data/models/models.dart';
+import 'package:notes_firebase_app/data/models/shared_preferences_manager.dart';
 import 'package:provider/provider.dart';
 
 import '../components/circle_image.dart';
 
 class ProfileScreen extends StatefulWidget {
-  static MaterialPage page(User user) {
+  static MaterialPage page() {
     return MaterialPage(
       name: NotesPages.profilePath,
       key: ValueKey(NotesPages.profilePath),
-      child: ProfileScreen(user: user),
+      child: ProfileScreen(),
     );
   }
 
-  final User user;
-  const ProfileScreen({
-    Key? key,
-    required this.user,
-  }) : super(key: key);
+  const ProfileScreen({Key? key}) : super(key: key);
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final SharedPreferencesManager preferencesManager =
+      SharedPreferencesManager();
+  late NoteUser user;
+
+  //   @override
+  // Widget build(BuildContext context) {
+  //   return Scaffold(
+  //     body: Consumer<SharedPreferencesManager>(
+  //         builder: (context, manager, child) {
+  //       getPrefsNotes();
+  //       return ListView.builder(
+  //           padding: const EdgeInsets.only(top: 20.0),
+  //           itemCount: prefsNotes.length,
+  //           itemBuilder: (context, index) {
+  //             return noteTile(context, prefsNotes[index]);
+  //           });
+  //     }),
+  //   );
+  // }
+
+  void getProfile() async {
+    final profile = await preferencesManager.getUser();
+    user = profile!;
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,17 +61,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
           },
         ),
       ),
-      body: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 16.0),
-            buildProfile(),
-            Expanded(
-              child: buildMenu(),
-            )
-          ],
-        ),
+      body: Consumer<SharedPreferencesManager>(
+        builder: (context, manager, child) {
+          getProfile();
+          return Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 16.0),
+                buildProfile(),
+                Expanded(
+                  child: buildMenu(),
+                )
+              ],
+            ),
+          );
+        },
       ),
     );
   }
@@ -57,6 +86,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       children: [
         buildDarkModeRow(),
         ListTile(
+          title: Text(user.email),
+        ),
+        ListTile(
           title: const Text('View raywenderlich.com'),
           onTap: () {
             Provider.of<ProfileManager>(context, listen: false)
@@ -65,10 +97,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         ListTile(
           title: const Text('Log out'),
-          onTap: () {
+          onTap: () async {
             Provider.of<ProfileManager>(context, listen: false)
                 .tapOnProfile(false);
             Provider.of<AppStateManager>(context, listen: false).logout();
+            await AuthManager.signOut(context: context);
           },
         ),
         myFavoritesButton(),
@@ -101,7 +134,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           const Text('Dark Mode'),
           Switch(
-            value: widget.user.darkMode,
+            value: user.darkMode,
             onChanged: (value) {
               Provider.of<ProfileManager>(context, listen: false).darkMode =
                   value;
@@ -116,12 +149,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Column(
       children: [
         CircleImage(
-          imageProvider: AssetImage(widget.user.profileImageUrl),
+          imageProvider: NetworkImage(user.profileImageUrl),
           imageRadius: 60.0,
         ),
         const SizedBox(height: 16.0),
         Text(
-          widget.user.firstName,
+          user.displayName,
           style: const TextStyle(
             fontSize: 21,
           ),

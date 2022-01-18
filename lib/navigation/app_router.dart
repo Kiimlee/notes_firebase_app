@@ -52,8 +52,7 @@ class AppRouter extends RouterDelegate<AppLink>
           OnboardingScreen.page(),
         if (appStateManager.isOnboardingComplete)
           Home.page(appStateManager.getSelectedTab),
-        if (profileManager.didSelectUser)
-          ProfileScreen.page(profileManager.getUser),
+        if (profileManager.didSelectUser) ProfileScreen.page(),
         if (profileManager.didTapOnRaywenderlich) WebViewScreen.page(),
       ],
     );

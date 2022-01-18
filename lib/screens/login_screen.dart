@@ -1,8 +1,9 @@
 import 'package:notes_firebase_app/data/models/app_state_manager.dart';
+import 'package:notes_firebase_app/data/models/auth_manager.dart';
 import 'package:notes_firebase_app/data/models/notes_pages.dart';
 import 'package:provider/provider.dart';
-
 import 'package:flutter/material.dart';
+import 'package:notes_firebase_app/components/google_sign_in_button.dart';
 
 class LoginScreen extends StatelessWidget {
   static MaterialPage page() {
@@ -48,10 +49,30 @@ class LoginScreen extends StatelessWidget {
               buildTextfield('🎹 password'),
               const SizedBox(height: 16),
               buildButton(context),
+              const SizedBox(height: 16),
+              googleSignInButton(context),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget googleSignInButton(BuildContext context) {
+    return FutureBuilder(
+      future: AuthManager.initializeFirebase(context: context),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Text('Error initializing Firebase');
+        } else if (snapshot.connectionState == ConnectionState.done) {
+          return GoogleSignInButton();
+        }
+        return CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(
+            Colors.blueGrey,
+          ),
+        );
+      },
     );
   }
 

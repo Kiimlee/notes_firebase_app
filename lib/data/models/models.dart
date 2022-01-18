@@ -1,4 +1,4 @@
-export 'user.dart';
+export 'note_user.dart';
 export 'task.dart';
 export 'profile_manager.dart';
 export 'app_state_manager.dart';
