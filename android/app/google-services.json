@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "961886688882",
+    "project_id": "notes-8d02c",
+    "storage_bucket": "notes-8d02c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:961886688882:android:1c7c756db3cb5a437014eb",
+        "android_client_info": {
+          "package_name": "com.example.notesFirebaseApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "961886688882-hdlsvg78qorfj9sovoe57t4nc7padaiq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNfZ_v48NazbJw-uicNK1reWgOIj4qqX8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "961886688882-hdlsvg78qorfj9sovoe57t4nc7padaiq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "961886688882-vvpum45u508i49jlup89685iaodq27rl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.notesFirebaseApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
