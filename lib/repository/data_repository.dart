@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:notes_firebase_app/data/models/task.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:notes_firebase_app/data/models/task.dart' as Taski;
 import '../data/models/note.dart';
 
 class DataRepository {
@@ -18,7 +21,7 @@ class DataRepository {
     return collection.add(note.toJson());
   }
 
-  Future<DocumentReference> addTask(String noteId, Task task) {
+  Future<DocumentReference> addTask(String noteId, Taski.Task task) {
     return collection.doc(noteId).collection('tasks').add(task.toJson());
   }
 
@@ -30,7 +33,7 @@ class DataRepository {
     await collection.doc(note.id).delete();
   }
 
-  void updateTask(String noteId, Task task) async {
+  void updateTask(String noteId, Taski.Task task) async {
     await collection
         .doc(noteId)
         .collection('tasks')
@@ -42,7 +45,16 @@ class DataRepository {
     await collection.doc(id).set({"tasks": tasks});
   }
 
-  void deleteTask(String noteId, Task task) async {
+  void deleteTask(String noteId, Taski.Task task) async {
     await collection.doc(noteId).collection('tasks').doc(task.id).delete();
+  }
+
+  static UploadTask? uploadFile(String destination, File file) {
+    try {
+      final ref = FirebaseStorage.instance.ref(destination);
+      return ref.putFile(file);
+    } on FirebaseException catch (e) {
+      return null;
+    }
   }
 }

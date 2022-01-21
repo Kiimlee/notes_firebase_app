@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notes_firebase_app/data/models/task.dart';
+import 'package:notes_firebase_app/screens/note_detail/note_detail_file.dart';
 import 'add_task_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:notes_firebase_app/repository/data_repository.dart';
@@ -23,8 +24,8 @@ class _NoteDetailState extends State<NoteDetail> {
         setState(
           () {
             task.isChecked = isChecked ?? false;
-            final updatedTask =
-                Task(task.contentMessage, task.isChecked, task.contentMessage);
+            final updatedTask = Task(task.contentMessage, task.isChecked,
+                task.contentMessage, task.imageUrl);
             repository.updateTask(widget.noteId, task);
           },
         );
@@ -33,22 +34,36 @@ class _NoteDetailState extends State<NoteDetail> {
   }
 
   Widget taskTile(BuildContext context, Task task) {
-    return Container(
-      height: 50,
-      color: const Color(0xFF393939),
-      child: Row(
-        children: [
-          taskCheckBox(context, task),
-          Container(
-            alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.only(left: 8),
-            child: Text(task.contentMessage,
-                style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: Colors.white)),
-          ),
-        ],
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => NoteDetailFile(task: task)));
+      },
+      child: Container(
+        height: 50,
+        color: const Color(0xFF393939),
+        child: Row(
+          children: [
+            taskCheckBox(context, task),
+            Container(
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.only(left: 8),
+              child: Text(task.contentMessage,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      color: Colors.white)),
+            ),
+            Spacer(),
+            task.imageUrl != null
+                ? const Align(
+                    alignment: Alignment.centerRight,
+                    child: Icon(Icons.file_copy, color: Colors.white))
+                : Container(),
+          ],
+        ),
       ),
     );
   }
