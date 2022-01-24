@@ -6,14 +6,14 @@ import 'package:notes_firebase_app/data/models/shared_preferences_manager.dart';
 import 'package:notes_firebase_app/data/models/note_user.dart';
 import 'package:provider/provider.dart';
 
-class GoogleSignInButton extends StatefulWidget {
-  const GoogleSignInButton({Key? key}) : super(key: key);
+class FacebookSignInButton extends StatefulWidget {
+  const FacebookSignInButton({Key? key}) : super(key: key);
 
   @override
-  _GoogleSignInButtonState createState() => _GoogleSignInButtonState();
+  _FacebookSignInButtonState createState() => _FacebookSignInButtonState();
 }
 
-class _GoogleSignInButtonState extends State<GoogleSignInButton> {
+class _FacebookSignInButtonState extends State<FacebookSignInButton> {
   bool _isSigningIn = false;
   final SharedPreferencesManager preferencesManager =
       SharedPreferencesManager();
@@ -41,7 +41,7 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
                 });
 
                 User? user =
-                    await AuthManager.signInWithGoogle(context: context);
+                    await AuthManager.signInWithFacebook(context: context);
 
                 setState(() {
                   _isSigningIn = false;
@@ -50,7 +50,7 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
                 if (user != null) {
                   final NoteUser newUser = NoteUser(
                       displayName: user.displayName!,
-                      email: user.email!,
+                      email: user.email ?? '',
                       profileImageUrl: user.photoURL!,
                       darkMode: false);
                   preferencesManager.saveUser(newUser);
@@ -66,7 +66,7 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const <Widget>[
                     Image(
-                      image: AssetImage("assets/google_logo.png"),
+                      image: AssetImage("assets/facebook_logo.png"),
                       height: 35.0,
                     ),
                     Padding(

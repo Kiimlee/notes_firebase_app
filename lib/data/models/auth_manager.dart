@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 class AuthManager extends ChangeNotifier {
   static Future<FirebaseApp> initializeFirebase({
@@ -18,6 +19,37 @@ class AuthManager extends ChangeNotifier {
       {required BuildContext context}) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user;
+
+    try {
+      final LoginResult result = await FacebookAuth.instance.login();
+      final AuthCredential facebookCredential =
+          FacebookAuthProvider.credential(result.accessToken!.token);
+      final UserCredential userCredential =
+          await auth.signInWithCredential(facebookCredential);
+
+      user = userCredential.user;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'account-exists-with-different-credential') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          AuthManager.customSnackBar(
+            content: 'The account already exists with a different credential.',
+          ),
+        );
+      } else if (e.code == 'invalid-credential') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          AuthManager.customSnackBar(
+            content: 'Error occurred while accessing credentials. Try again.',
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        AuthManager.customSnackBar(
+          content: 'Error occurred using Facebook Sign-In. Try again.',
+        ),
+      );
+    }
+    return user;
   }
 
   static Future<User?> signInWithGoogle({required BuildContext context}) async {

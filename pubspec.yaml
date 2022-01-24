@@ -50,6 +50,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   url_launcher_web: ^2.0.6
   firebase_auth: ^3.3.5
+  flutter_facebook_auth: ^4.0.1
 
 dev_dependencies:
   flutter_test:

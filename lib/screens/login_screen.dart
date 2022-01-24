@@ -1,3 +1,4 @@
+import 'package:notes_firebase_app/components/facebook_sign_in_button.dart';
 import 'package:notes_firebase_app/data/models/app_state_manager.dart';
 import 'package:notes_firebase_app/data/models/auth_manager.dart';
 import 'package:notes_firebase_app/data/models/notes_pages.dart';
@@ -51,6 +52,7 @@ class LoginScreen extends StatelessWidget {
               buildButton(context),
               const SizedBox(height: 16),
               googleSignInButton(context),
+              facebookSignInButton(context),
             ],
           ),
         ),
@@ -63,11 +65,29 @@ class LoginScreen extends StatelessWidget {
       future: AuthManager.initializeFirebase(context: context),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return Text('Error initializing Firebase');
+          return const Text('Error initializing Firebase');
         } else if (snapshot.connectionState == ConnectionState.done) {
-          return GoogleSignInButton();
+          return const GoogleSignInButton();
         }
-        return CircularProgressIndicator(
+        return const CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(
+            Colors.blueGrey,
+          ),
+        );
+      },
+    );
+  }
+
+  Widget facebookSignInButton(BuildContext context) {
+    return FutureBuilder(
+      future: AuthManager.initializeFirebase(context: context),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const Text('Error initializing Firebase');
+        } else if (snapshot.connectionState == ConnectionState.done) {
+          return const FacebookSignInButton();
+        }
+        return const CircularProgressIndicator(
           valueColor: AlwaysStoppedAnimation<Color>(
             Colors.blueGrey,
           ),
