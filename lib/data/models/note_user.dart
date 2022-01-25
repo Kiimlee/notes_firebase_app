@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:convert';
 
 class NoteUser {
-  final String displayName;
-  final String email;
-  final String profileImageUrl;
-  final bool darkMode;
+  final String? displayName;
+  final String? email;
+  final String? profileImageUrl;
+  final bool? darkMode;
 
   NoteUser({
     required this.displayName,

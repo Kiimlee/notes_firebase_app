@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:notes_firebase_app/components/circle_image.dart';
 import 'package:notes_firebase_app/data/models/auth_manager.dart';
@@ -86,7 +87,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       children: [
         buildDarkModeRow(),
         ListTile(
-          title: Text(user.email),
+          title: Text(user.email ?? 'unknown'),
         ),
         ListTile(
           title: const Text('View raywenderlich.com'),
@@ -134,7 +135,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           const Text('Dark Mode'),
           Switch(
-            value: user.darkMode,
+            value: user.darkMode ?? false,
             onChanged: (value) {
               Provider.of<ProfileManager>(context, listen: false).darkMode =
                   value;
@@ -145,16 +146,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  Widget profileImage() {
+    return user.profileImageUrl == null
+        ? const CircleAvatar(
+            backgroundColor: Colors.transparent,
+            backgroundImage: AssetImage(
+              'assets/me.jpg',
+            ),
+          )
+        : CircleImage(
+            imageProvider: NetworkImage(user.profileImageUrl!),
+            imageRadius: 60.0,
+          );
+  }
+
   Widget buildProfile() {
     return Column(
       children: [
-        CircleImage(
-          imageProvider: NetworkImage(user.profileImageUrl),
-          imageRadius: 60.0,
-        ),
+        profileImage(),
         const SizedBox(height: 16.0),
         Text(
-          user.displayName,
+          user.displayName ?? 'unknown',
           style: const TextStyle(
             fontSize: 21,
           ),

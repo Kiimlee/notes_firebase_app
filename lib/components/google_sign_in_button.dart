@@ -49,9 +49,9 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
 
                 if (user != null) {
                   final NoteUser newUser = NoteUser(
-                      displayName: user.displayName!,
-                      email: user.email!,
-                      profileImageUrl: user.photoURL!,
+                      displayName: user.displayName,
+                      email: user.email,
+                      profileImageUrl: user.photoURL,
                       darkMode: false);
                   preferencesManager.saveUser(newUser);
 
