@@ -66,9 +66,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              buildTextfield('🍔 username', false),
+              buildTextfield('🍔 email', false),
               const SizedBox(height: 16),
-              buildTextfield('🎹 password', true),
+              buildTextfield('🎹 mot de passe', true),
               const SizedBox(height: 16),
               signupButton(context),
               const SizedBox(height: 16),
@@ -128,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: const Text(
-          'Signup',
+          "S'inscrire",
           style: TextStyle(color: Colors.white),
         ),
         onPressed: () async {
@@ -153,7 +153,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 borderRadius: BorderRadius.circular(8.0),
               ),
               child: const Text(
-                'Login',
+                'Se connecter',
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () async {
@@ -199,7 +199,7 @@ class _LoginScreenState extends State<LoginScreen> {
       keyboardType: isPassword
           ? TextInputType.emailAddress
           : TextInputType.visiblePassword,
-      controller: isPassword ? _emailController : _passwordController,
+      controller: isPassword ? _passwordController : _emailController,
       cursorColor: rwColor,
       decoration: InputDecoration(
         border: const OutlineInputBorder(

@@ -72,7 +72,7 @@ class _FacebookSignInButtonState extends State<FacebookSignInButton> {
                     Padding(
                       padding: EdgeInsets.only(left: 10),
                       child: Text(
-                        'Sign in with Google',
+                        'Se connecter avec META',
                         style: TextStyle(
                           fontSize: 20,
                           color: Colors.black54,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:notes_firebase_app/data/models/task.dart';
 import 'package:notes_firebase_app/screens/note_detail/note_detail_file.dart';
 import 'add_task_dialog.dart';
@@ -24,8 +25,8 @@ class _NoteDetailState extends State<NoteDetail> {
         setState(
           () {
             task.isChecked = isChecked ?? false;
-            final updatedTask = Task(task.contentMessage, task.isChecked,
-                task.contentMessage, task.imageUrl);
+            final updatedTask = Task(
+                task.contentMessage, task.isChecked, task.id, task.imageUrl);
             repository.updateTask(widget.noteId, task);
           },
         );
@@ -34,37 +35,59 @@ class _NoteDetailState extends State<NoteDetail> {
   }
 
   Widget taskTile(BuildContext context, Task task) {
-    return InkWell(
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => NoteDetailFile(task: task)));
-      },
-      child: Container(
-        height: 50,
-        color: const Color(0xFF393939),
-        child: Row(
-          children: [
-            taskCheckBox(context, task),
-            Container(
-              alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.only(left: 8),
-              child: Text(task.contentMessage,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: Colors.white)),
-            ),
-            Spacer(),
-            task.imageUrl != null
-                ? const Align(
-                    alignment: Alignment.centerRight,
-                    child: Icon(Icons.file_copy, color: Colors.white))
-                : Container(),
-          ],
+    return Slidable(
+      child: InkWell(
+        onTap: () {
+          if (task.imageUrl != null) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => NoteDetailFile(task: task)));
+          }
+        },
+        child: Container(
+          height: 50,
+          color: const Color(0xFF393939),
+          child: Row(
+            children: [
+              taskCheckBox(context, task),
+              Container(
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.only(left: 8),
+                child: Text(task.contentMessage,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: Colors.white)),
+              ),
+              const Spacer(),
+              task.imageUrl != null
+                  ? const Align(
+                      alignment: Alignment.centerRight,
+                      child: Icon(Icons.file_copy, color: Colors.white))
+                  : Container(),
+            ],
+          ),
         ),
       ),
+      actionPane: const SlidableDrawerActionPane(),
+      actionExtentRatio: 0.25,
+      actions: <Widget>[
+        IconSlideAction(
+            caption: 'Delete',
+            color: Colors.transparent,
+            foregroundColor: Colors.black,
+            iconWidget: const Icon(Icons.delete, color: Colors.red),
+            onTap: () => repository.deleteTask(widget.noteId, task)),
+      ],
+      secondaryActions: <Widget>[
+        IconSlideAction(
+            caption: 'Delete',
+            color: Colors.transparent,
+            foregroundColor: Colors.black,
+            iconWidget: const Icon(Icons.delete, color: Colors.red),
+            onTap: () => repository.deleteTask(widget.noteId, task)),
+      ],
     );
   }
 

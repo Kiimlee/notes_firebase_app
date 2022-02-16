@@ -30,6 +30,11 @@ class DataRepository {
   }
 
   void deleteNote(Note note) async {
+    // Delete all the tasks when deleting a note
+    var snapshots = await collection.doc(note.id).collection('tasks').get();
+    for (var doc in snapshots.docs) {
+      await doc.reference.delete();
+    }
     await collection.doc(note.id).delete();
   }
 
